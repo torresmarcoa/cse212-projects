@@ -2,6 +2,7 @@
 {
     private List<PriorityItem> _queue = new();
 
+    public int Length => _queue.Count; // Added a length method for the tests
     /// <summary>
     /// Add a new value to the queue with an associated priority.  The
     /// node is always added to the back of the queue regardless of 
@@ -24,14 +25,15 @@
 
         // Find the index of the item with the highest priority to remove
         var highPriorityIndex = 0;
-        for (int index = 1; index < _queue.Count - 1; index++)
+        for (int index = 1; index < _queue.Count; index++) // Error, the queue was never evaluating last index
         {
-            if (_queue[index].Priority >= _queue[highPriorityIndex].Priority)
+            if (_queue[index].Priority > _queue[highPriorityIndex].Priority) // Error, using >= causes ties to favor the last inserted item
                 highPriorityIndex = index;
         }
 
         // Remove and return the item with the highest priority
         var value = _queue[highPriorityIndex].Value;
+        _queue.RemoveAt(highPriorityIndex); // It was never removing from queue
         return value;
     }
 
