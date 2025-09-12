@@ -13,8 +13,9 @@ public class CustomerService
         // Test Cases
 
         // Test 1
-        // Scenario: 
-        // Expected Result: Queue 
+        // Scenario: Creating one new queue with a max size of -5 to trigger the 
+        // default size
+        // Expected Result: Queue size 10
         Console.WriteLine("Test 1");
         var cs = new CustomerService(-5);
         Console.WriteLine($"Queue should be 10: {cs}");
@@ -24,17 +25,44 @@ public class CustomerService
 
 
         // Test 2
-        // Scenario: 
-        // Expected Result: 
+        // Scenario: Adding and serving one customer 
+        // Expected Result: Display the customer
         Console.WriteLine("Test 2");
+        var customer = new CustomerService(2);
+        customer.AddNewCustomer();
+        customer.ServeCustomer();
 
-        // Defect(s) Found: Queue count comparison was > should be >=
+        // Defect(s) Found: ServeCustomer was not checking length
+        // and was deleting without getting the customer first 
 
         Console.WriteLine("=================");
 
         // Add more Test Cases As Needed Below
         // Test 3
-        // Scenario: ServeCustomer should serve the next customer from the queue 
+        // Scenario: Testing service order 2 customers
+        // Expected Result: Entering order should remain untouched
+        Console.WriteLine("Test 2");
+        customer = new CustomerService(4);
+        customer.AddNewCustomer();
+        customer.AddNewCustomer();
+        Console.WriteLine($"Before serving customers: {customer}");
+        customer.ServeCustomer();
+        customer.ServeCustomer();
+        Console.WriteLine($"After serving customers: {customer}");
+        // Defect(s) Found: No problems
+
+        // Test 4
+        // Scenario: Trying to add more customers than the max size
+        // Expected Result: Error prompted 
+        Console.WriteLine("Test 4");
+        customer = new CustomerService(3);
+        customer.AddNewCustomer();
+        customer.AddNewCustomer();
+        customer.AddNewCustomer();
+        customer.AddNewCustomer();
+        Console.WriteLine($"Service Queue: {customer}");
+        // Defect(s) Found: Add customer was not handling max size correctly
+        // using > instead of >= is like max size + 1 prompt error
     }
 
     private readonly List<Customer> _queue = new();
@@ -78,7 +106,7 @@ public class CustomerService
     private void AddNewCustomer()
     {
         // Verify there is room in the service queue
-        if (_queue.Count >= _maxSize)
+        if (_queue.Count >= _maxSize) // Error, using > will let one more customer
         {
             Console.WriteLine("Maximum Number of Customers in Queue.");
             return;
@@ -101,9 +129,15 @@ public class CustomerService
     /// </summary>
     private void ServeCustomer()
     {
-        _queue.RemoveAt(0);
-        var customer = _queue[0];
-        Console.WriteLine(customer);
+        if (_queue.Count <= 0) // it needs a check on the length
+        {
+            Console.WriteLine("No Customers in the queue");
+        }
+        else {
+            var customer = _queue[0];
+            _queue.RemoveAt(0); // deletion should happen before to provide accurate info
+            Console.WriteLine(customer);
+        }
     }
 
     /// <summary>
