@@ -24,7 +24,10 @@ public class Translator
     /// <returns>fixed array of divisors</returns>
     public void AddWord(string fromWord, string toWord)
     {
-        // ADD YOUR CODE HERE
+        // To build the desired functionality, I have to
+        // assign the fromWord as the key and toWord as 
+        // the value
+        _words.Add(fromWord, toWord);
     }
 
     /// <summary>
@@ -34,7 +37,13 @@ public class Translator
     /// <returns>The translated word or "???" if no translation is available</returns>
     public string Translate(string fromWord)
     {
-        // ADD YOUR CODE HERE
-        return "";
+        // To read the word, we have to receive the desired key
+        // 'fromWord' and request its value, if no value found 
+        // so such key exists, then we must return ??.
+        if (_words.ContainsKey(fromWord))
+            return _words[fromWord];
+
+        else
+            return "???";
     }
 }

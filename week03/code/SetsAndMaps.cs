@@ -1,4 +1,6 @@
 using System.Text.Json;
+using System.Text.RegularExpressions;
+
 
 public static class SetsAndMaps
 {
@@ -21,8 +23,26 @@ public static class SetsAndMaps
     /// <param name="words">An array of 2-character words (lowercase, no duplicates)</param>
     public static string[] FindPairs(string[] words)
     {
-        // TODO Problem 1 - ADD YOUR CODE HERE
-        return [];
+        // First consideration, we are looking to use a O(n) that means a loop, a foreach pair in words then
+        // if the pair first letter is not equal to the second letter then create a newPair with the inverted 
+        // order, then if the new pair exits in the set, and if the pair (with a comparison) is < 0
+        // (this comparison avoids duplicates), then adds the new pair into the list, and finally the list
+        // is converted into an array.
+        var symmetricPairs = new HashSet<string>(words);
+        var pairs = new List<string>();
+
+        foreach (string pair in words)
+        {
+            if (pair[1] != pair[0])
+            {
+                var newPair = $"{pair[1]}{pair[0]}";
+                if (symmetricPairs.Contains(newPair) && (string.Compare(pair, newPair) < 0))
+                {
+                    pairs.Add($"{pair} & {newPair}");
+                }
+            }
+        }
+        return pairs.ToArray();
     }
 
     /// <summary>
@@ -43,6 +63,18 @@ public static class SetsAndMaps
         {
             var fields = line.Split(",");
             // TODO Problem 2 - ADD YOUR CODE HERE
+            // First we have to read the correct field
+            // which is 3 and then for each unique key we will add
+            // it to the dictionary and put a 1, then if we see a duplicate,
+            // we will add it one more.
+
+            var educationLevel = fields[3];
+
+
+            if (degrees.ContainsKey(educationLevel))
+                degrees[educationLevel]++;
+            else
+                degrees[educationLevel] = 1;
         }
 
         return degrees;
@@ -67,7 +99,46 @@ public static class SetsAndMaps
     public static bool IsAnagram(string word1, string word2)
     {
         // TODO Problem 3 - ADD YOUR CODE HERE
-        return false;
+        // First, we normalize (put all in lower case) then we ignore the spaces, then
+        // we have to check if word 1 and word 2 has the same length
+        // Then we add the word to a dictionary (key = letter / value = how many times 
+        // appears) and check with a for each loop if the letters in the second
+        // word are in the map, if we find the letter we subtract one to the value
+        // and if all the values in the dictionary are 0 it's an anagram if not is false
+
+        var isAnagramMap = new Dictionary<char, int>();
+
+        var newWord1 = Regex.Replace(word1.ToLower(), @"\s", "");
+        var newWord2 = Regex.Replace(word2.ToLower(), @"\s", "");
+
+        if (newWord1.Length != newWord2.Length)
+            return false;
+        else
+        {
+            foreach (char letter in newWord1)
+            {
+                if (isAnagramMap.ContainsKey(letter))
+                    isAnagramMap[letter]++;
+                else
+                    isAnagramMap[letter] = 1;
+            }
+        }
+        foreach (char letter in newWord2)
+        {
+            if (!isAnagramMap.ContainsKey(letter))
+                return false;
+
+            isAnagramMap[letter]--;
+
+            if (isAnagramMap[letter] < 0)
+                return false;
+        }
+        foreach (var count in isAnagramMap.Values)
+        {
+            if (count != 0)
+                return false;
+        }
+        return true;
     }
 
     /// <summary>
@@ -101,6 +172,17 @@ public static class SetsAndMaps
         // on those classes so that the call to Deserialize above works properly.
         // 2. Add code below to create a string out each place a earthquake has happened today and its magitude.
         // 3. Return an array of these string descriptions.
-        return [];
+
+        // First we have to add the code in the FeatureCollection to use and read the information from the JSON
+        var earthquakeData = new List<string>();
+        foreach (var earthquake in featureCollection.Features)
+        {
+            var place = earthquake.Properties.Place;
+            var magnitude = earthquake.Properties.Magnitude;
+
+            earthquakeData.Add($"{place} - Mag {magnitude}");
+        }
+
+        return earthquakeData.ToArray();
     }
 }

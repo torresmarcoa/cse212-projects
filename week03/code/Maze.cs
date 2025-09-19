@@ -30,9 +30,17 @@ public class Maze
     /// Check to see if you can move left.  If you can, then move.  If you
     /// can't move, throw an InvalidOperationException with the message "Can't go that way!".
     /// </summary>
+    /// 
+    /// To solve this problem or implement this solution, we have to, when moving up, and one to
+    /// the x (_currX) move down reduce one x, if no available paths, we show and exception
+    /// the same for y right ++ left --
     public void MoveLeft()
     {
         // FILL IN CODE
+        var canMove = _mazeMap[(_currX, _currY)];
+        if (canMove[0] == false)
+            throw new InvalidOperationException("Can't go that way!");
+        else _currX--;
     }
 
     /// <summary>
@@ -42,6 +50,10 @@ public class Maze
     public void MoveRight()
     {
         // FILL IN CODE
+        var canMove = _mazeMap[(_currX, _currY)];
+        if (canMove[1] == false)
+            throw new InvalidOperationException("Can't go that way!");
+        else _currX++;
     }
 
     /// <summary>
@@ -51,6 +63,10 @@ public class Maze
     public void MoveUp()
     {
         // FILL IN CODE
+        var canMove = _mazeMap[(_currX, _currY)];
+        if (canMove[2] == false)
+            throw new InvalidOperationException("Can't go that way!");
+        else _currY--;
     }
 
     /// <summary>
@@ -60,6 +76,10 @@ public class Maze
     public void MoveDown()
     {
         // FILL IN CODE
+        var canMove = _mazeMap[(_currX, _currY)];
+        if (canMove[3] == false)
+            throw new InvalidOperationException("Can't go that way!");
+        else _currY++;
     }
 
     public string GetStatus()

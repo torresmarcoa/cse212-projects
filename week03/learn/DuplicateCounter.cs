@@ -1,4 +1,6 @@
-﻿public class DuplicateCounter
+﻿using System.Runtime.ExceptionServices;
+
+public class DuplicateCounter
 {
     //Count how many duplicates are in a collection of data.
 
@@ -24,7 +26,25 @@
 
     private static int CountDuplicates(int[] data)
     {
-        // Add code here.
-        return 0;
+        // Solution: To see which numbers are duplicated, we will
+        // need to add all the numbers in a new set, and add a block
+        // of if and else, if the number already exists then add one 
+        // to a duplicated count
+        HashSet<int> set = new HashSet<int>();
+        int duplicatedNumbers = 0;
+
+        foreach (int item in data)
+        {
+            if (set.Contains(item))
+            {
+                duplicatedNumbers++;
+            }
+            else
+            {
+                set.Add(item);
+            }
+        }
+
+        return duplicatedNumbers;
     }
 }
